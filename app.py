@@ -7,19 +7,15 @@ from pathlib import Path
 from profiler.profiler import DataProfiler
 from rules.rule_engine import RuleEngine
 
-# =========================================================
 # Page Config
-# =========================================================
 st.set_page_config(
-    page_title="Universal Data Cleaner",
+    page_title="Universal Data Cleaner - Keval",
     layout="wide"
 )
 
-st.title("🧹 Universal Data Cleaner & EDA Tool")
+st.title("Universal Data Cleaner & EDA Tool")
 
-# =========================================================
 # Performance Helpers
-# =========================================================
 @st.cache_data(show_spinner=False)
 def load_data(file):
     if file.name.endswith(".csv"):
@@ -41,9 +37,7 @@ def get_active_df():
     return st.session_state.get("clean_df", st.session_state["raw_df"])
 
 
-# =========================================================
 # File Upload
-# =========================================================
 uploaded_file = st.file_uploader(
     "Upload CSV / Excel / JSON",
     type=["csv", "xlsx", "json"]
@@ -60,16 +54,12 @@ st.session_state.setdefault("clean_df", df.copy())
 
 st.success("Dataset loaded successfully")
 
-# =========================================================
 # Tabs
-# =========================================================
 tab_overview, tab_cleaning, tab_eda, tab_query = st.tabs(
     ["📋 Overview", "🧹 Cleaning", "📊 EDA", "🧠 SQL Query"]
 )
 
-# =========================================================
 # TAB 1 — OVERVIEW
-# =========================================================
 with tab_overview:
     st.header("🔍 Dataset Overview")
 
@@ -81,7 +71,7 @@ with tab_overview:
     st.dataframe(df.head(20), use_container_width=True)
 
     # ---------------- Missing Values ----------------
-    st.subheader("🧩 Missing Values Summary")
+    st.subheader("Missing Values Summary")
 
     missing_df = pd.DataFrame({
         "Column": df.columns,
@@ -95,7 +85,7 @@ with tab_overview:
     )
 
     # ---------------- Table Definition ----------------
-    st.subheader("📘 Table Definition (Data Dictionary)")
+    st.subheader("Table Definition (Data Dictionary)")
 
     table_def = []
     for col in df.columns:
@@ -113,9 +103,7 @@ with tab_overview:
 
     st.dataframe(pd.DataFrame(table_def), use_container_width=True)
 
-# =========================================================
 # TAB 2 — CLEANING
-# =========================================================
 with tab_cleaning:
     profile = run_profiling(df)
 
@@ -154,7 +142,7 @@ with tab_cleaning:
     use_suggestions = st.checkbox("Apply suggested rules")
 
     # ---------------- Manual Rules ----------------
-    st.header("🧹 Cleaning Rules")
+    st.header("Cleaning Rules")
 
     rules = suggested_rules if use_suggestions else {
         "global_rules": {
@@ -194,22 +182,20 @@ with tab_cleaning:
             if rule:
                 rules["columns"][col] = rule
 
-    if st.button("🚀 Apply Cleaning"):
+    if st.button("Apply Cleaning"):
         engine = RuleEngine(df, rules)
         clean_df, audit = engine.apply()
         st.session_state["clean_df"] = clean_df
 
         st.success("Cleaning completed")
 
-        st.subheader("🧾 Audit Log")
+        st.subheader("Audit Log")
         for a in audit:
             st.write("•", a)
 
         st.dataframe(clean_df.head(20), use_container_width=True)
 
-# =========================================================
 # TAB 3 — EDA (GRAPHS)
-# =========================================================
 with tab_eda:
     st.header("📊 Exploratory Data Analysis")
 
@@ -232,16 +218,14 @@ with tab_eda:
         )
 
         if len(num_cols) > 1:
-            st.subheader("📈 Correlation Heatmap")
+            st.subheader("Correlation Heatmap")
             corr = active_df[num_cols].corr()
             fig = px.imshow(corr, text_auto=True)
             st.plotly_chart(fig, use_container_width=True)
 
-# =========================================================
 # TAB 4 — SQL QUERY EDITOR
-# =========================================================
 with tab_query:
-    st.header("🧠 SQL-Style Query Editor")
+    st.header("SQL-Style Query Editor")
 
     st.markdown(
         """
@@ -267,9 +251,7 @@ with tab_query:
         except Exception as e:
             st.error(f"Query error: {e}")
 
-# =========================================================
 # Export
-# =========================================================
 st.header("⬇ Export Cleaned Data")
 
 active_df = get_active_df()
@@ -284,4 +266,5 @@ st.download_button(
     "Download JSON",
     active_df.to_json(orient="records"),
     "cleaned.json"
+
 )
