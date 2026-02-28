@@ -1,0 +1,67 @@
+┌──────────────────────┐
+│   Streamlit UI Layer │
+│──────────────────────│
+│ • File Upload        │
+│ • Cleaning Options   │
+│ • Visualization UI   │
+│ • Query Builder      │
+│ • Download Buttons   │
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│   File Ingestion     │
+│──────────────────────│
+│ • CSV / JSON / TXT  │
+│ • PDF → Tables      │
+│ • Images → Metadata │
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│   Data Profiler      │  ← Brain of the system
+│──────────────────────│
+│ • Column types       │
+│ • Missing %          │
+│ • Unique counts      │
+│ • Skewness           │
+│ • Outlier signals    │
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ Rule Suggestion      │
+│ Engine               │
+│──────────────────────│
+│ • Auto defaults      │
+│ • Best practices    │
+│ • Editable rules    │
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ Rule Engine          │  ← Core reusable logic
+│──────────────────────│
+│ • Missing handling   │
+│ • Outlier handling   │
+│ • Type casting       │
+│ • Column removal     │
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ Cleaned Data Store   │
+│ (Session State)     │
+└─────────┬────────────┘
+          │
+          ├────────────► Visualization Engine
+          │               • Auto plot selection
+          │               • Interactive charts
+          │
+          ├────────────► Query Engine
+          │               • UI-based filters
+          │               • Safe execution
+          │
+          └────────────► Export Engine
+                          • CSV / Excel / JSON
+                          • Rules JSON
